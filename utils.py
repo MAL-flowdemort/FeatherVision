@@ -1,3 +1,4 @@
+from io import BytesIO
 from matplotlib import pyplot as plt
 import numpy as np
 import torch
@@ -5,8 +6,9 @@ from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from torchvision.transforms import functional as F
 from PIL import Image, ImageDraw
 import requests
-from io import BytesIO
 import cv2
+from img2vec_pytorch import Img2Vec
+
 
 torch.hub._validate_ssl_certificates = False
 
@@ -148,7 +150,7 @@ Predicts the label of the image.
 """
 
 
-def predict_image_label(image, model, class_indices):
+def predict_image_label(image, model, labels):
     # Convert image to array
     image_array = np.array(image)
 
@@ -161,10 +163,13 @@ def predict_image_label(image, model, class_indices):
     # Find the index of the maximum prediction
     max_index = np.argmax(predictions)
 
-    # Get the class labels
-    labels = list(class_indices.keys())
-
     # Get the predicted label
     predicted_label = labels[max_index]
 
-    return predicted_label
+    return "Tvoje mama"
+
+
+def image_to_vectors(image):
+    img2vec = Img2Vec()
+    img_vectors = img2vec.get_vec(image)
+    return img_vectors
