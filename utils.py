@@ -150,7 +150,7 @@ Predicts the label of the image.
 """
 
 
-def predict_image_label(image, model, labels):
+def predict_image_label(image, model):
     # Convert image to array
     image_array = np.array(image)
 
@@ -161,6 +161,21 @@ def predict_image_label(image, model, labels):
     predictions = model.predict(image_input)
 
     return predictions
+
+def predict_image_label_cnn(image, model, labels):
+    # Convert image to array
+    image_array = np.array(image)
+
+    # Expand dimensions to match model input shape
+    image_input = np.expand_dims(image_array, axis=0)
+
+    # Make predictions
+    predictions = model.predict(image_input)
+
+    # Get the predicted label
+    predicted_label = labels[np.argmax(predictions[0])]
+
+    return predicted_label
 
 
 def image_to_vectors(image):
