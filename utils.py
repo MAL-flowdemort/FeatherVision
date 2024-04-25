@@ -160,13 +160,7 @@ def predict_image_label(image, model, labels):
     # Make predictions
     predictions = model.predict(image_input)
 
-    # Find the index of the maximum prediction
-    max_index = np.argmax(predictions)
-
-    # Get the predicted label
-    predicted_label = labels[max_index]
-
-    return "Tvoje mama"
+    return predictions
 
 
 def image_to_vectors(image):
