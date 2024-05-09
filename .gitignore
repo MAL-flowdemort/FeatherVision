@@ -2,3 +2,4 @@ archive/
 .vscode/
 venv/
 training_logs/
+# exploration_v2/
