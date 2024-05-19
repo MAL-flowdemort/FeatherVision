@@ -3,3 +3,4 @@ archive/
 venv/
 training_logs/
 # exploration_v2/
+birds_data/
