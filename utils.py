@@ -8,6 +8,8 @@ from PIL import Image, ImageDraw
 import requests
 import cv2
 from img2vec_pytorch import Img2Vec
+from IPython.display import display
+
 
 
 torch.hub._validate_ssl_certificates = False
@@ -27,10 +29,11 @@ def load_image_from_path(path):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # Convert to PIL image
     pil_img = Image.fromarray(img)
+
     # Display the image
-    plt.imshow(pil_img)
-    plt.axis("off")  # Turn off axis numbers
-    plt.show()
+    # plt.imshow(pil_img)
+    # plt.axis("off")  # Turn off axis numbers
+    # plt.show()
     return pil_img
 
 
@@ -75,7 +78,7 @@ def resize_with_aspect_ratio(image, output_size=(224, 224), fill_color=(0, 0, 0)
 
 def detect_birds(
     image,
-    model,
+    model=None,
     padding=15,
     output_size=(224, 224),
     showOutput=True,
@@ -83,6 +86,10 @@ def detect_birds(
 ):
     img_tensor = F.to_tensor(image)
 
+    if model is None:
+        model = get_model()  # Ensure a model is always available
+
+    original_image = image
     with torch.no_grad():
         prediction = model([img_tensor])[0]
 
@@ -133,14 +140,16 @@ def detect_birds(
             # Draw a rectangle around the biggest bird on the copy
             draw.rectangle(padded_box, outline="red", width=3)
 
+            #Display the original image
+            display(original_image)
+
             # Show the original image with the bounding box
-            image_copy.show()
+            # image_copy.show()
+            display(image_copy)
 
             # Show the cropped image
-            cropped_image.show()
-
-            # Show the cropped and resized image
-            resized_image.show()
+            # cropped_image.show()
+            display(cropped_image)
 
     return resized_image
 
