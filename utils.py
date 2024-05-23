@@ -12,6 +12,7 @@ from IPython.display import display
 
 
 
+
 torch.hub._validate_ssl_certificates = False
 
 
@@ -191,3 +192,37 @@ def image_to_vectors(image):
     img2vec = Img2Vec()
     img_vectors = img2vec.get_vec(image)
     return img_vectors
+
+
+def preprocess_image(image_path):
+    img = Image.open(image_path)
+    return img
+
+
+def extract_features(image, img2vec):
+    img_features = img2vec.get_vec(image)
+    return np.array(img_features).reshape(1, -1)
+
+
+def predict_image_class(image_path, model, label_encoder):
+    img2vec = Img2Vec()
+    image = Image.open(image_path)
+    detection_model = fasterrcnn_resnet50_fpn(weights="DEFAULT")
+    detection_model.eval()
+
+    detected_bird_image = detect_birds(image, detection_model, showOutput=False)
+    if detected_bird_image is not None:
+        image_features = extract_features(detected_bird_image, img2vec)
+        prediction = model.predict(image_features)
+        predicted_class = np.argmax(prediction, axis=1)
+        predicted_label = label_encoder.inverse_transform(predicted_class)
+        return predicted_label[0]
+    return "No bird detected"
+
+
+def predict_images(image_paths, model, label_encoder):
+    results = []
+    for image_path in image_paths:
+        predicted_label = predict_image_class(image_path, model, label_encoder)
+        results.append((image_path, predicted_label))
+    return results
