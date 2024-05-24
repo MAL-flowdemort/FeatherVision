@@ -152,6 +152,9 @@ def detect_birds(
             # cropped_image.show()
             display(cropped_image)
 
+            # Show the resized image
+            display(resized_image)
+
     return resized_image
 
 
